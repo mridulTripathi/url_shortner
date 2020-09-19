@@ -1,6 +1,7 @@
 const SHORT_URL_CHARACTER_SET =
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+// Generating Short URL from unique ID from DB
 export function getShortURL(urlID: number) {
   var shortURL = "";
 
@@ -14,6 +15,7 @@ export function getShortURL(urlID: number) {
   return shortURL;
 }
 
+// Extracting back the DB id from short URL
 export function getUrlID(shortURL: string) {
   var urlId = 0;
   var power = 0;
@@ -29,10 +31,10 @@ export function getUrlID(shortURL: string) {
 
     power++;
   }
-
   return urlId;
 }
 
+//Method to verify if URL is valid
 export function isValidURL(str: string) {
   var pattern = new RegExp(
     "^(https?:\\/\\/)?" + // protocol

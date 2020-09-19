@@ -1,5 +1,5 @@
+//Initializing SQLite database
 var sqlite3 = require("sqlite3").verbose();
-
 var db = new sqlite3.Database("shorturl.db", (err: any) => {
   if (err) {
     console.log(err.message);
@@ -18,6 +18,7 @@ var db = new sqlite3.Database("shorturl.db", (err: any) => {
   }
 });
 
+// Retreiving Records by ID
 export async function getURLDataByID(id: string) {
   return new Promise(async (resolve, reject) => {
     let db = new sqlite3.Database("shorturl.db");
@@ -41,6 +42,7 @@ export async function getURLDataByID(id: string) {
   });
 }
 
+// Adding a new record
 export async function saveNewEntry(longUrl: string, password: string) {
   return new Promise(async (resolve, reject) => {
     let db = new sqlite3.Database("shorturl.db");
@@ -66,6 +68,7 @@ export async function saveNewEntry(longUrl: string, password: string) {
   });
 }
 
+// Updating an existing record
 export async function updateShortURL(id: string, shortURL: string) {
   return new Promise(async (resolve, reject) => {
     let db = new sqlite3.Database("shorturl.db");
