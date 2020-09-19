@@ -1,7 +1,15 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import path from "path";
-import { initializeDB } from "./db";
+import {
+  getURLDataByID,
+  initializeDB,
+  saveNewEntry,
+  updateShortURL,
+} from "./db";
+import { getLongURLFromShort, getNewShortURL } from "./services/dbServices";
+import { isValidURL } from "./utils";
 require("dotenv").config();
+var bodyParser = require("body-parser");
 
 //Initializing DB
 initializeDB();
@@ -9,18 +17,47 @@ initializeDB();
 // rest of the code remains same
 const app = express();
 
-//Server Test End Point
-app.get("/", (req, res) => res.send("Server Up and Running!!"));
+// support parsing of application/json type post data
+app.use(bodyParser.json());
+
+//support parsing of application/x-www-form-urlencoded post data
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Load View Engines
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-//View Renders
-app.get("/init", (req, res) => {
-  res.render("index", {
-    title: "The Real Name",
+app.get("/:shortURL", async (req: Request, res: Response) => {
+  if (req.params && req.params.shortURL) {
+    const urlData: any = await getLongURLFromShort(req.params.shortURL);
+
+    if (urlData) {
+      console.log();
+      return res.redirect(urlData.longURL);
+    }
+  }
+  res.render("shortURL", {
+    shortUrl: "Sorry, looks like you have used a wrong URL. Kindly check it",
   });
+});
+
+app.get("/", async (req: Request, res: Response) => {
+  res.render("index");
+});
+
+app.post("/", async (req: Request, res: Response) => {
+  if (req.body && req.body.longURL && isValidURL(req.body.longURL)) {
+    const shortURL = await getNewShortURL(req.body.longURL, req.body.password);
+    console.log("shortURL", shortURL);
+
+    res.render("shortURL", {
+      shortUrl: `${process.env.BASE_URL}${shortURL}`,
+    });
+  } else {
+    res.render("shortURL", {
+      shortUrl: "There is something Wrong with your URL! Please retry.",
+    });
+  }
 });
 
 app.listen(process.env.PORT, () => {
