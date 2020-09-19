@@ -32,6 +32,7 @@ app.post("/", async (req: Request, res: Response) => {
     console.log("shortURL", shortURL);
 
     res.render("shortURL", {
+      title: "Congratulations, your short URL is ready!",
       shortUrl: `${process.env.BASE_URL}${shortURL}`,
     });
   } else {
@@ -52,7 +53,8 @@ app.get("/:shortURL", async (req: Request, res: Response) => {
     }
   }
   res.render("shortURL", {
-    shortUrl: "Sorry, looks like you have used a wrong URL. Kindly check it",
+    shortUrl:
+      "Sorry, looks like you have used a wrong URL. Kindly check it and try again",
   });
 });
 
