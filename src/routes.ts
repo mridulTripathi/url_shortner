@@ -23,12 +23,7 @@ router.post(
 
 router.get(
   "/:shortURL",
-  [
-    // username must be an email
-    param("shortURL").isLength({ min: 1 }),
-    // password must be at least 5 chars long
-    // body("password").isLength({ min: 5 }),
-  ],
+  [param("shortURL").isLength({ min: 1 })],
   async (req: Request, res: Response) => {
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
