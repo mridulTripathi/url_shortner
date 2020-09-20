@@ -8,7 +8,7 @@ var db = new sqlite3.Database("shorturl.db", (err: any) => {
 
     db.serialize(() => {
       db.prepare(
-        `CREATE TABLE IF NOT EXISTS urlInfo ( ShortURL_ID INTEGER PRIMARY KEY AUTOINCREMENT, longURL TEXT NOT NULL, shortURL TEXT, password TEXT, dateTimeCreated TEXT, dateTimeModified TEXT)`
+        `CREATE TABLE IF NOT EXISTS urlInfo ( ShortURL_ID INTEGER PRIMARY KEY AUTOINCREMENT, longURL TEXT NOT NULL, shortURL TEXT, dateTimeCreated TEXT, dateTimeModified TEXT)`
       )
         .run()
         .finalize();
@@ -43,7 +43,7 @@ export async function getURLDataByID(id: string) {
 }
 
 // Adding a new record
-export async function saveNewEntry(longUrl: string, password: string) {
+export async function saveNewEntry(longUrl: string) {
   return new Promise(async (resolve, reject) => {
     let db = new sqlite3.Database("shorturl.db");
     var date = new Date();
@@ -51,8 +51,8 @@ export async function saveNewEntry(longUrl: string, password: string) {
 
     // insert one row into the langs table
     db.run(
-      `INSERT INTO urlInfo (longURL, shortURL, password, dateTimeCreated, dateTimeModified) VALUES (?,?,?,?,?)`,
-      [longUrl, "", password, dateUTC, dateUTC],
+      `INSERT INTO urlInfo (longURL, shortURL, dateTimeCreated, dateTimeModified) VALUES (?,?,?,?)`,
+      [longUrl, "", dateUTC, dateUTC],
       function (this: any, err: any) {
         if (err) {
           reject(err.message);
